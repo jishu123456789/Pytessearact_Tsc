@@ -6,7 +6,7 @@ This is a Flask-based API that extracts text from PDFs using Tesseract OCR and O
 
 ## Features
 
-- Accepts a PDF URL via a POST request.
+- Accepts a PDF URL via a POSTMAN request.
 - Downloads and converts the PDF to images.
 - Uses Tesseract OCR to extract text.
 - Returns the extracted text as a response.
@@ -15,16 +15,17 @@ This is a Flask-based API that extracts text from PDFs using Tesseract OCR and O
 
 ### Prerequisites
 
-Ensure you have the following installed:
+Ensure you have the following installed in your virtual environment in ubuntu:
 
-- Python 3.8+
+- Python 3.9+
 - Pip
 - Tesseract OCR
+- pdf2image
 
-### Install Dependencies
+### Install Dependencies : Install them in your virtual enviroment in ubuntu
 
 ```sh
-pip install flask requests numpy opencv-python pytesseract pdf2image
+pip install flask requests numpy opencv-python pytesseract pdf2image tesseract-ocr
 ```
 
 ## Running the API Locally
@@ -79,56 +80,13 @@ http://192.168.X.X:5000/extract_text
    ```
 6. Click **Send**.
 
-### Using `curl` (Command Line)
+### Using `curl` (Command Line) : [You can directly put this command on Postman. A Sample PDF url is also given] [Give proper url as per your device] 
 
 ```sh
 curl -X POST http://127.0.0.1:5000/extract_text \
      -H "Content-Type: application/json" \
-     -d '{"pdf_url": "https://investors.3m.com/financials/sec-filings/content/0001558370-19-000470/0001558370-19-000470.pdf"}'
+     -d '{"pdf_url": "https://arxiv.org/pdf/2410.07659"}'
 ```
-
-## Flask API Code Example
-
-Create a file `app.py`:
-
-```python
-from flask import Flask, request, jsonify
-import requests
-import cv2
-import numpy as np
-import pytesseract
-from pdf2image import convert_from_path
-import os
-
-app = Flask(__name__)
-
-@app.route('/extract_text', methods=['POST'])
-def extract_text():
-    data = request.get_json()
-    pdf_url = data.get("pdf_url")
-    if not pdf_url:
-        return jsonify({"error": "No PDF URL provided"}), 400
-    
-    response = requests.get(pdf_url)
-    if response.status_code != 200:
-        return jsonify({"error": "Failed to download PDF"}), 500
-    
-    with open("temp.pdf", "wb") as f:
-        f.write(response.content)
-    
-    pages = convert_from_path("temp.pdf")
-    extracted_text = []
-    for page in pages:
-        img = np.array(page)
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        text = pytesseract.image_to_string(gray)
-        extracted_text.append(text)
-    
-    return jsonify({"extracted_text": "\n".join(extracted_text)})
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
-```
-
+        
 ### 🚀 Enjoy using the Flask PDF Text Extraction API! 🚀
 
