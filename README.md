@@ -80,7 +80,7 @@ http://192.168.X.X:5000/extract_text
    ```
 6. Click **Send**.
 
-### Using `curl` (Command Line) : [You can directly put this command on Postman. A Sample PDF url is also given] [Give proper url as per your device] 
+### Using `curl` (Command Line) : [You can directly put this command on Postman. A Sample PDF url is also given] [Give proper local IP Address as per your device] 
 
 ```sh
 curl -X POST http://127.0.0.1:5000/extract_text \
